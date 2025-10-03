@@ -1,31 +1,22 @@
-"use client";
-import { useEffect, useState } from "react";
+const URL = 'https://nomad-movies.nomadcoders.workers.dev/movies';
 
-// 홈페이지에만 표시
-// client component에서 metadata 설정 불가
-// export const metadata = {
-//   title: "Home",
-// };
+export const metadata = {
+  title: "Home",
+};
 
-export default function Pages() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [movie, setMovie] = useState([]);
-  const getMovies = async () => {
-    const response = await fetch(
-      `https://nomad-movies.nomadcoders.workers.dev/movies`
-    );
-    const json = await response.json();
-    setMovie(json);
-    setIsLoading(false);
-  };
+async function getMovies() {
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  const response = await fetch(URL);
+  const json = await response.json();
+  return json;
+}
 
-  useEffect(() => {
-    getMovies();
-  }, []);
-
+// server component 에서 fetching -> 네트워크탭에서 보이지 않음
+export default async function HomePages() {
+  const movies = await getMovies();
   return (
     <div>
-      {isLoading ? 'Loading...' : JSON.stringify(movie)}
+      {JSON.stringify(movies)}
     </div>
   );
 }
